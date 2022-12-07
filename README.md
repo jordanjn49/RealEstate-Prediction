@@ -8,7 +8,7 @@
 <li>Recherche d'un dataset</li>
 <li>Lecture des données</li>
 <li>Pré-processing - recherche des variables pertinentes</li>
-<li>Data-engineering via une API pour les données géographique</li>
+<li>Feature-engineering via une API pour les données géographique</li>
 </ul>
 
 <p>Enfin l'algorithme vient travailler les données en plusieurs étapes :</p>
