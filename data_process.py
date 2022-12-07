@@ -6,7 +6,7 @@ def preprocessing(filename):
     dataset = pd.read_csv(filename, delimiter="|")
 
     # We choose the different columns with interests and we reindex them (-1)
-    selected_vars = [9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 35, 37, 39, 43]
+    selected_vars = [9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 35, 37, 39, 40, 43]
     selected_vars = [k - 1 for k in selected_vars]
     dataset = dataset[dataset.columns[selected_vars]]
 
