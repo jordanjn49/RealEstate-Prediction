@@ -20,6 +20,7 @@ def preprocessing(filename):
     # We eliminate surface that are null or NaN
     dataset = dataset[dataset['Surface reelle bati'] != 0]
     dataset = dataset[dataset['Surface reelle bati'].notna()]
+    dataset = dataset[dataset['Surface terrain'].notna()]
 
     # We eliminate land values that are NaN
     dataset = dataset[dataset['Valeur fonciere'].notna()]
