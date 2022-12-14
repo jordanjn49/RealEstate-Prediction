@@ -78,7 +78,7 @@ def add_neighborhood(dataframe, distances, indices, nbVoisins):
             sommeVFNeighbors += dataframe['Valeur fonciere'][index]
             sommesVF = np.append(sommesVF, sommeVFNeighbors)
         moyenneVF = sommesVF.sum()/nbVoisins
-        print(moyenneVF)
+        # print(moyenneVF)
         
         
 def determine_neighborhood(dataframe):

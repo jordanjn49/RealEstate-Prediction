@@ -5,6 +5,7 @@ import numpy as np # linear algebra
 # Distribution graphs (histogram/bar graph) of column data
 def plotPerColumnDistribution(df, nGraphShown, nGraphPerRow):
     nunique = df.nunique()
+    df = df.drop(columns=['Nbr. pieces'])
     df = df[[col for col in df if nunique[col] > 1 and nunique[col] < 50]] # For displaying purposes, pick columns that have between 1 and 50 unique values
     nRow, nCol = df.shape
     columnNames = list(df)
@@ -63,9 +64,9 @@ def plotAll(name):
     nRowsRead = 1000 # specify 'None' if want to read whole file
     df1 = pd.read_csv(name, delimiter=',', nrows = nRowsRead)
     df1 = df1.drop(columns=['Nombre de lots', 'Nature mutation'])
-    df1 = df1.drop("Unnamed: 0",axis=1)
+    df1 = df1.drop("Unnamed: 0", axis=1)
     df1 = df1.rename(columns = {'Nombre pieces principales':'Nbr. pieces'})
     df1.dataframeName = name
-    plotPerColumnDistribution(df1, 10, 5)
+    plotPerColumnDistribution(df1, 2, 2)
     plotCorrelationMatrix(df1, 10)
     plotScatterMatrix(df1, 20, 10)
