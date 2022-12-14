@@ -70,19 +70,23 @@ def add_coordinates(filename):
     return dataset_geocoded
 
 
-def add_neighborhood(dataframe, distances, indices):
+def add_neighborhood(dataframe, distances, indices, nbVoisins):
     for index in range(len(indices)):
         sommesVF = np.empty(0)
         sommeVFNeighbors = 0
-        for neighborIndex in range(len(indices[index])):
-            sommeVFNeighbors += float(dataframe['Valeur fonciere'][index])
-        sommesVF = np.append(sommesVF, sommeVFNeighbors)
+        for neighborIndex in range(nbVoisins):
+            sommeVFNeighbors += dataframe['Valeur fonciere'][index]
+            sommesVF = np.append(sommesVF, sommeVFNeighbors)
+        moyenneVF = sommesVF.sum()/nbVoisins
+        print(moyenneVF)
         
         
 def determine_neighborhood(dataframe):
     df = dataframe.copy()
     tree = BallTree(df[['latitude', 'longitude']].values, leaf_size=2, metric='haversine')
 
-    distances, indices = tree.query(df[['latitude', 'longitude']].values, k=10, return_distance=True)
+    nbVoisins = 10
 
-    add_neighborhood(df, distances, indices)
+    distances, indices = tree.query(df[['latitude', 'longitude']].values, k=nbVoisins, return_distance=True)
+
+    add_neighborhood(df, distances, indices, nbVoisins)
