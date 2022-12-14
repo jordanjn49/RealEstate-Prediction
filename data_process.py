@@ -59,47 +59,52 @@ def preprocessing(filename):
     return dataset
 
 
-def add_coordinates(filename):
+def feature_engineering(filename):
     dataset_geocoded = pd.read_csv(filename, delimiter=",")
 
-    # We choose the different columns with interests and we reindex them (-1)
-    selected_vars = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14]
-    selected_vars = [k - 1 for k in selected_vars]
-    dataset_geocoded = dataset_geocoded[dataset_geocoded.columns[selected_vars]]
+    #######################################################
+    ###########        Ajout des distances      ###########
+    #######################################################
 
-    dataset_geocoded.reset_index(drop=True, inplace=True)
-    dataset_geocoded.to_csv("DATASET-Preprocessed&Geocoded&Filtered.csv")
-    return dataset_geocoded
+    tree = BallTree(dataset_geocoded[['latitude', 'longitude']].values, leaf_size=2, metric='haversine')
+    nbVoisins = 10
+    distances, indices = tree.query(dataset_geocoded[['latitude', 'longitude']].values, k=nbVoisins, return_distance=True)
 
-
-def add_neighborhood(dataframe, distances, indices, nbVoisins):
     listMoyennesVf = np.empty(0)
     for index in range(len(indices)):
         listSommesVF = np.empty(0)
         sommeVFNeighbors = 0
         for neighborIndex in range(nbVoisins):
-            sommeVFNeighbors += dataframe['Valeur fonciere'][index]
+            sommeVFNeighbors += dataset_geocoded['Valeur fonciere'][index]
             listSommesVF = np.append(listSommesVF, sommeVFNeighbors)
-        moyenneVF = listSommesVF.sum()/nbVoisins
+        moyenneVF = listSommesVF.sum() / nbVoisins
         listMoyennesVf = np.append(listMoyennesVf, moyenneVF)
 
-    dataframe['Moyenne des valeurs foncières des ' + str(nbVoisins) + ' ventes les plus proches'] = listMoyennesVf
 
     listDistancesMoyennes = np.empty(0)
     for index in range(len(distances)):
-        distanceMoyenne = distances[index].sum() / nbVoisins * 6371 # We want to have it in kilometers
+        distanceMoyenne = distances[index].sum() / nbVoisins * 6371  # We want to have it in kilometers
         listDistancesMoyennes = np.append(listDistancesMoyennes, distanceMoyenne)
 
-    dataframe['Moyenne des distances des ' + str(nbVoisins) + ' ventes les plus proches'] = listDistancesMoyennes
+    dataset_geocoded['moy_vf_' + str(nbVoisins) + '_plus_proches'] = listMoyennesVf
+    dataset_geocoded['moy_dist_' + str(nbVoisins) + '_plus_proches'] = listDistancesMoyennes
 
-    dataframe.to_csv("DATASET-Preprocessed&Geocoded&Filtered&Neighborhooded.csv")
+
+    #######################################################
+    ###########        Ajout des densités       ###########
+    #######################################################
+
+
+    ##################################################
+    #######          Tri    ##########
+    ##################################################
+
+    #selected_vars = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14]
+    #selected_vars = [k - 1 for k in selected_vars]
+    #dataset_geocoded = dataset_geocoded[dataset_geocoded.columns[selected_vars]]
+
+    dataset_geocoded.reset_index(drop=True, inplace=True)
+    dataset_geocoded.to_csv("DATASET-Final.csv")
+
         
-def determine_neighborhood(dataframe):
-    df = dataframe.copy()
-    tree = BallTree(df[['latitude', 'longitude']].values, leaf_size=2, metric='haversine')
 
-    nbVoisins = 10
-
-    distances, indices = tree.query(df[['latitude', 'longitude']].values, k=nbVoisins, return_distance=True)
-
-    add_neighborhood(df, distances, indices, nbVoisins)
