@@ -7,3 +7,5 @@ if __name__ == "__main__":
 
     # After going to https://adresse.data.gouv.fr/csv, we get the geocoded CSV, and now we are going to filter it!
     dataset_geo = data_process.add_coordinates('DATASET-Preprocessed&Geocoded.csv')
+
+    dataset_neighborhood = data_process.determine_neighborhood(dataset_geo)

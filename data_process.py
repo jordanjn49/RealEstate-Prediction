@@ -1,4 +1,6 @@
 import pandas as pd
+import numpy as np
+from sklearn.neighbors import BallTree
 
 pd.set_option('display.max_columns', None)
 
@@ -56,3 +58,21 @@ def add_coordinates(filename):
     dataset_geocoded.reset_index(drop=True, inplace=True)
     dataset_geocoded.to_csv("DATASET-Preprocessed&Geocoded&Filtered.csv")
     return dataset_geocoded
+
+
+def add_neighborhood(dataframe, distances, indices):
+    for index in range(len(indices)):
+        sommesVF = np.empty(0)
+        sommeVFNeighbors = 0
+        for neighborIndex in range(len(indices[index])):
+            sommeVFNeighbors += float(dataframe['Valeur fonciere'][index])
+        sommesVF = np.append(sommesVF, sommeVFNeighbors)
+        
+        
+def determine_neighborhood(dataframe):
+    df = dataframe.copy()
+    tree = BallTree(df[['latitude', 'longitude']].values, leaf_size=2, metric='haversine')
+
+    distances, indices = tree.query(df[['latitude', 'longitude']].values, k=10, return_distance=True)
+
+    add_neighborhood(df, distances, indices)
