@@ -94,7 +94,6 @@ def add_neighborhood(dataframe, distances, indices, nbVoisins):
 
     dataframe.to_csv("DATASET-Preprocessed&Geocoded&Filtered&Neighborhooded.csv")
         
-        
 def determine_neighborhood(dataframe):
     df = dataframe.copy()
     tree = BallTree(df[['latitude', 'longitude']].values, leaf_size=2, metric='haversine')
