@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 pd.set_option('display.max_columns', None)
@@ -37,6 +38,15 @@ def preprocessing(filename):
     dataset['Voie'] = dataset['Voie'].fillna(' ')
     dataset['Adresse'] = dataset['No voie'].astype(str) + ' ' + dataset['Type de voie'] + ' ' + dataset['Voie'] + ' ' + \
                          dataset['Commune'] + ' ' + dataset['Code postal'].astype(str) + ' ' + 'France'
+
+    # On parse la valeur foncière (string) en float pour pouvoir en manipuler la valeur
+
+    floatValeursFoncieres = np.empty(0)
+    for valeurFonciere in dataset['Valeur fonciere']:
+        valeurFonciere = float(valeurFonciere.replace(',', '.'))
+        floatValeursFoncieres = np.append(floatValeursFoncieres, valeurFonciere)
+
+    dataset['Valeur fonciere'] = floatValeursFoncieres
 
     dataset = dataset.drop(
         columns=['Code postal', 'Commune', 'No voie', 'Type de voie', 'Voie', 'Code voie', 'Code departement'])
