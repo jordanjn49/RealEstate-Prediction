@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 import pandas as pd
 import numpy as np
@@ -71,14 +73,26 @@ def add_coordinates(filename):
 
 
 def add_neighborhood(dataframe, distances, indices, nbVoisins):
+    listMoyennesVf = np.empty(0)
     for index in range(len(indices)):
-        sommesVF = np.empty(0)
+        listSommesVF = np.empty(0)
         sommeVFNeighbors = 0
         for neighborIndex in range(nbVoisins):
             sommeVFNeighbors += dataframe['Valeur fonciere'][index]
-            sommesVF = np.append(sommesVF, sommeVFNeighbors)
-        moyenneVF = sommesVF.sum()/nbVoisins
-        print(moyenneVF)
+            listSommesVF = np.append(listSommesVF, sommeVFNeighbors)
+        moyenneVF = listSommesVF.sum()/nbVoisins
+        listMoyennesVf = np.append(listMoyennesVf, moyenneVF)
+
+    dataframe['Moyenne des valeurs foncières des ' + str(nbVoisins) + ' ventes les plus proches'] = listMoyennesVf
+
+    listDistancesMoyennes = np.empty(0)
+    for index in range(len(distances)):
+        distanceMoyenne = distances[index].sum() / nbVoisins * 6371 # We want to have it in kilometers
+        listDistancesMoyennes = np.append(listDistancesMoyennes, distanceMoyenne)
+
+    dataframe['Moyenne des distances des ' + str(nbVoisins) + ' ventes les plus proches'] = listDistancesMoyennes
+
+    dataframe.to_csv("DATASET-Preprocessed&Geocoded&Filtered&Neighborhooded.csv")
         
         
 def determine_neighborhood(dataframe):
