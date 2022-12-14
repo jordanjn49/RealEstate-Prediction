@@ -1,4 +1,5 @@
 import pandas as pd
+
 pd.set_option('display.max_columns', None)
 
 
@@ -15,7 +16,7 @@ def preprocessing(filename):
         (dataset['Nature mutation'] == 'Vente') | (dataset['Nature mutation'] == "Vente en l'état futur d'achèvement")]
 
     # We want the number or lot to be equals to 0 or 1 because each lot is priced equally
-    #dataset = dataset[(dataset['Nombre de lots'] == 0) | (dataset['Nombre de lots'] == 1)]
+    # dataset = dataset[(dataset['Nombre de lots'] == 0) | (dataset['Nombre de lots'] == 1)]
 
     # We eliminate surface that are null or NaN
     dataset = dataset[dataset['Surface reelle bati'] != 0]
@@ -37,13 +38,21 @@ def preprocessing(filename):
     dataset['Adresse'] = dataset['No voie'].astype(str) + ' ' + dataset['Type de voie'] + ' ' + dataset['Voie'] + ' ' + \
                          dataset['Commune'] + ' ' + dataset['Code postal'].astype(str) + ' ' + 'France'
 
-    dataset = dataset.drop(columns=['Code postal','Commune','No voie','Type de voie','Voie','Code voie','Code departement'])
+    dataset = dataset.drop(
+        columns=['Code postal', 'Commune', 'No voie', 'Type de voie', 'Voie', 'Code voie', 'Code departement'])
     dataset.reset_index(drop=True, inplace=True)
     dataset.to_csv("DATASET-Preprocessed.csv")
     return dataset
 
 
-def add_coordinates(dataframe):
-    # TODO
-    df = dataframe.copy()
-    return df
+def add_coordinates(filename):
+    dataset_geocoded = pd.read_csv(filename, delimiter=",")
+
+    # We choose the different columns with interests and we reindex them (-1)
+    selected_vars = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14]
+    selected_vars = [k - 1 for k in selected_vars]
+    dataset_geocoded = dataset_geocoded[dataset_geocoded.columns[selected_vars]]
+
+    dataset_geocoded.reset_index(drop=True, inplace=True)
+    dataset_geocoded.to_csv("DATASET-Preprocessed&Geocoded&Filtered.csv")
+    return dataset_geocoded
