@@ -94,14 +94,29 @@ def feature_engineering(filename):
     ###########        Ajout des densités       ###########
     #######################################################
 
+    density = pd.read_csv('DATASET-DEN2018.csv', delimiter=",")
+
+    dataset_geocoded['densite_pop'] = ''
+    for i in range(len(dataset_geocoded)):
+        for j in range(len(density)):
+            if dataset_geocoded['result_postcode'][i] == density['ZIPCode'][j]:
+                dataset_geocoded['densite_pop'][i] = density['Densite'][j]
+                i += 1
+        dataset_geocoded['densite_pop'][i] = 0
+
 
     ##################################################
     #######          Tri    ##########
     ##################################################
 
-    #selected_vars = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14]
-    #selected_vars = [k - 1 for k in selected_vars]
-    #dataset_geocoded = dataset_geocoded[dataset_geocoded.columns[selected_vars]]
+    dataset_geocoded = dataset_geocoded[dataset_geocoded['latitude'].notna()]
+    dataset_geocoded = dataset_geocoded[dataset_geocoded['longitude'].notna()]
+    dataset_geocoded = dataset_geocoded[dataset_geocoded['densite_pop'] != 0]
+    dataset_geocoded = dataset_geocoded[dataset_geocoded['moy_dist_' + str(nbVoisins) + '_plus_proches'] != 0]
+
+    selected_vars =  [2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14, 28, 29, 30]
+    selected_vars = [k - 1 for k in selected_vars]
+    dataset_geocoded = dataset_geocoded[dataset_geocoded.columns[selected_vars]]
 
     dataset_geocoded.reset_index(drop=True, inplace=True)
     dataset_geocoded.to_csv("DATASET-Final.csv")

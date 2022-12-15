@@ -8,4 +8,5 @@ if __name__ == "__main__":
     # After going to https://adresse.data.gouv.fr/csv, we get the geocoded CSV, and now we are going to filter it!
     data_process.feature_engineering('DATASET-Preprocessed&Geocoded.csv')
 
+    # We trace different graphs to analyse similarities
     data_graphic.plotAll('DATASET-Final.csv')
