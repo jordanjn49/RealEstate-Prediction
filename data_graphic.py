@@ -5,7 +5,6 @@ import numpy as np # linear algebra
 # Distribution graphs (histogram/bar graph) of column data
 def plotPerColumnDistribution(df, nGraphShown, nGraphPerRow):
     nunique = df.nunique()
-    df = df.drop(columns=['Nbr. pieces'])
     df = df[[col for col in df if nunique[col] > 1 and nunique[col] < 50]] # For displaying purposes, pick columns that have between 1 and 50 unique values
     nRow, nCol = df.shape
     columnNames = list(df)
