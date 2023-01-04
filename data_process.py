@@ -1,6 +1,3 @@
-import math
-
-import numpy as np
 import pandas as pd
 import numpy as np
 from sklearn.neighbors import BallTree
@@ -63,7 +60,7 @@ def feature_engineering(filename):
     dataset_geocoded = pd.read_csv(filename, delimiter=",")
 
     #######################################################
-    ###########        Ajout des distances      ###########
+#                   Ajout des distances                   #
     #######################################################
 
     tree = BallTree(dataset_geocoded[['latitude', 'longitude']].values, leaf_size=2, metric='haversine')
@@ -90,7 +87,7 @@ def feature_engineering(filename):
     dataset_geocoded['moy_dist_' + str(nbVoisins) + '_plus_proches'] = listDistancesMoyennes
 
     #######################################################
-    ###########        Ajout des densités       ###########
+    #                  Ajout des densités                #
     #######################################################
 
     density = pd.read_csv('DATASET-DEN2018.csv', delimiter=",")
@@ -104,7 +101,7 @@ def feature_engineering(filename):
         dataset_geocoded['densite_pop'][i] = 0
 
     #######################################################
-    ###########         Ajout du €/m2           ###########
+    #                   Ajout du €/m2                     #
     #######################################################
 
     listPriceBySquareMeter = np.empty(0)
@@ -115,7 +112,7 @@ def feature_engineering(filename):
     dataset_geocoded['prix_m2'] = listPriceBySquareMeter
 
     ##################################################
-    #######          Tri    ##########
+    #                   Tri                          #
     ##################################################
 
     # creating a dict file
