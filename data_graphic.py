@@ -48,8 +48,8 @@ def plotScatterMatrix(df, plotSize, textSize):
     # Remove rows and columns that would lead to df being singular
     df = df[[col for col in df if df[col].nunique() > 1]] # keep columns where there are more than 1 unique values
     columnNames = list(df)
-    if len(columnNames) > 10: # reduce the number of columns for matrix inversion of kernel density plots
-        columnNames = columnNames[:10]
+    if len(columnNames) > 11: # reduce the number of columns for matrix inversion of kernel density plots
+        columnNames = columnNames[:11]
     df = df[columnNames]
     ax = pd.plotting.scatter_matrix(df, alpha=0.75, figsize=[plotSize, plotSize], diagonal='kde')
     corrs = df.corr().values
