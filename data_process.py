@@ -41,7 +41,6 @@ def preprocessing(filename):
                          dataset['Commune'] + ' ' + dataset['Code postal'].astype(str) + ' ' + 'France'
 
     # On parse la valeur foncière (string) en float pour pouvoir en manipuler la valeur
-
     floatValeursFoncieres = np.empty(0)
     for valeurFonciere in dataset['Valeur fonciere']:
         valeurFonciere = float(valeurFonciere.replace(',', '.'))
