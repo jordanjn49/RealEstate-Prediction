@@ -34,7 +34,7 @@ def plotCorrelationMatrix(df, graphWidth):
     corr = df.corr()
     plt.figure(num=None, figsize=(graphWidth, graphWidth), dpi=80, facecolor='w', edgecolor='k')
     corrMat = plt.matshow(corr, fignum = 1)
-    plt.xticks(range(len(corr.columns)), corr.columns, rotation=90)
+    plt.xticks(range(len(corr.columns)), corr.columns, rotation=270)
     plt.yticks(range(len(corr.columns)), corr.columns)
     plt.gca().xaxis.tick_bottom()
     plt.colorbar(corrMat)
@@ -54,7 +54,7 @@ def plotScatterMatrix(df, plotSize, textSize):
     ax = pd.plotting.scatter_matrix(df, alpha=0.75, figsize=[plotSize, plotSize], diagonal='kde')
     corrs = df.corr().values
     for i, j in zip(*plt.np.triu_indices_from(ax, k = 1)):
-        ax[i, j].annotate('Corr. coef = %.3f' % corrs[i, j], (0.8, 0.2), xycoords='axes fraction', ha='center', va='center', size=textSize)
+        ax[i, j].annotate("%.2f" % corrs[i, j], (0.8, 0.2), xycoords='axes fraction', ha='center', va='center', size=textSize)
     plt.suptitle(f'Scatter and Density Plot for {filename}', fontsize=15)
     plt.show()
 
@@ -65,6 +65,8 @@ def plotAll(name):
     df1 = df1.drop(columns=['Nombre de lots', 'Nature mutation'])
     df1 = df1.drop("Unnamed: 0", axis=1)
     df1 = df1.rename(columns = {'Nombre pieces principales':'Nbr. pieces'})
+    df1 = df1.rename(columns={'moy_vf_10_plus_proches': 'Moy vf voisin'})
+    df1 = df1.rename(columns={'moy_dist_10_plus_proches': 'Distance moy voisin'})
     df1.dataframeName = name
     plotPerColumnDistribution(df1, 2, 2)
     plotCorrelationMatrix(df1, 10)
