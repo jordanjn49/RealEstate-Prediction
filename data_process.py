@@ -68,7 +68,8 @@ def feature_engineering(filename):
 
     tree = BallTree(dataset_geocoded[['latitude', 'longitude']].values, leaf_size=2, metric='haversine')
     nbVoisins = 10
-    distances, indices = tree.query(dataset_geocoded[['latitude', 'longitude']].values, k=nbVoisins, return_distance=True)
+    distances, indices = tree.query(dataset_geocoded[['latitude', 'longitude']].values, k=nbVoisins,
+                                    return_distance=True)
 
     listMoyennesVf = np.empty(0)
     for index in range(len(indices)):
@@ -80,7 +81,6 @@ def feature_engineering(filename):
         moyenneVF = listSommesVF.sum() / nbVoisins
         listMoyennesVf = np.append(listMoyennesVf, moyenneVF)
 
-
     listDistancesMoyennes = np.empty(0)
     for index in range(len(distances)):
         distanceMoyenne = distances[index].sum() / nbVoisins * 6371  # We want to have it in kilometers
@@ -88,7 +88,6 @@ def feature_engineering(filename):
 
     dataset_geocoded['moy_vf_' + str(nbVoisins) + '_plus_proches'] = listMoyennesVf
     dataset_geocoded['moy_dist_' + str(nbVoisins) + '_plus_proches'] = listDistancesMoyennes
-
 
     #######################################################
     ###########        Ajout des densités       ###########
@@ -104,22 +103,39 @@ def feature_engineering(filename):
                 i += 1
         dataset_geocoded['densite_pop'][i] = 0
 
+    #######################################################
+    ###########         Ajout du €/m2           ###########
+    #######################################################
+
+    listPriceBySquareMeter = np.empty(0)
+    for i in range(len(dataset_geocoded)):
+        prix = dataset_geocoded['Valeur fonciere'][i] / dataset_geocoded['Surface terrain'][i]
+        listPriceBySquareMeter = np.append(listPriceBySquareMeter, prix)
+
+    dataset_geocoded['prix_m2'] = listPriceBySquareMeter
 
     ##################################################
     #######          Tri    ##########
     ##################################################
+
+    for i in range(len(dataset_geocoded)):
+        if dataset_geocoded['Type local'][i] == 'Maison':
+            dataset_geocoded['Type local'].replace(to_replace=['Maison'], value=[1])
+        elif dataset_geocoded['Type local'][i] == 'Appartement':
+            dataset_geocoded['Type local'].replace(dataset_geocoded['Type local'][i], 2)
+        else:
+            dataset_geocoded['Type local'].replace(dataset_geocoded['Type local'][i], 3)
+
+    dataset_geocoded['Type local'].replace(to_replace=['Maison', 'Maison'], value=[1, 2])
 
     dataset_geocoded = dataset_geocoded[dataset_geocoded['latitude'].notna()]
     dataset_geocoded = dataset_geocoded[dataset_geocoded['longitude'].notna()]
     dataset_geocoded = dataset_geocoded[dataset_geocoded['densite_pop'] != 0]
     dataset_geocoded = dataset_geocoded[dataset_geocoded['moy_dist_' + str(nbVoisins) + '_plus_proches'] != 0]
 
-    selected_vars =  [2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14, 28, 29, 30]
+    selected_vars = [2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14, 28, 29, 30, 31]
     selected_vars = [k - 1 for k in selected_vars]
     dataset_geocoded = dataset_geocoded[dataset_geocoded.columns[selected_vars]]
 
     dataset_geocoded.reset_index(drop=True, inplace=True)
     dataset_geocoded.to_csv("DATASET-Final.csv")
-
-        
-
