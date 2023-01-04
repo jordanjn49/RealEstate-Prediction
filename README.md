@@ -18,3 +18,16 @@
 <li>Phase de testings sur 20% des données</li>
 <li>Validation du ML sur 35% des données</li>
 </ul>
+
+# RealEstate-Prediction
+
+## TODO List
+* [ ] Data Preprocessing
+* [ ] Data Visualization
+    * [ ] Geolocation results
+    * [ ] Mean price evolution according to the year
+    * [ ] Median price evolution according to the year
+    * [ ] Correlation matrix
+* [ ] Model Training
+* [ ] Model Evaluation
+* [ ] Model Prediction
