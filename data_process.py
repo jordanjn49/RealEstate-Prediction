@@ -118,15 +118,9 @@ def feature_engineering(filename):
     #######          Tri    ##########
     ##################################################
 
-    for i in range(len(dataset_geocoded)):
-        if dataset_geocoded['Type local'][i] == 'Maison':
-            dataset_geocoded['Type local'].replace(to_replace=['Maison'], value=[1])
-        elif dataset_geocoded['Type local'][i] == 'Appartement':
-            dataset_geocoded['Type local'].replace(dataset_geocoded['Type local'][i], 2)
-        else:
-            dataset_geocoded['Type local'].replace(dataset_geocoded['Type local'][i], 3)
-
-    dataset_geocoded['Type local'].replace(to_replace=['Maison', 'Maison'], value=[1, 2])
+    # creating a dict file
+    type_local = {'Maison': 1, 'Appartement': 2, 'Local industriel. commercial ou assimilé': 3}
+    dataset_geocoded['Type local'] = [type_local[item] for item in dataset_geocoded['Type local']]
 
     dataset_geocoded = dataset_geocoded[dataset_geocoded['latitude'].notna()]
     dataset_geocoded = dataset_geocoded[dataset_geocoded['longitude'].notna()]

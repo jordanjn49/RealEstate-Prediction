@@ -62,12 +62,12 @@ def plotScatterMatrix(df, plotSize, textSize):
 def plotAll(name):
     nRowsRead = 1000 # specify 'None' if want to read whole file
     df1 = pd.read_csv(name, delimiter=',', nrows = nRowsRead)
-    df1 = df1.drop(columns=['Nombre de lots', 'Nature mutation'])
+    df1 = df1.drop(columns=['Nombre de lots', 'Nature mutation', 'Type local'])
     df1 = df1.drop("Unnamed: 0", axis=1)
     df1 = df1.rename(columns = {'Nombre pieces principales':'Nbr. pieces'})
     df1 = df1.rename(columns={'moy_vf_10_plus_proches': 'Moy vf voisin'})
     df1 = df1.rename(columns={'moy_dist_10_plus_proches': 'Distance moy voisin'})
     df1.dataframeName = name
-    plotPerColumnDistribution(df1, 2, 2)
+    plotPerColumnDistribution(df1, 1, 1)
     plotCorrelationMatrix(df1, 10)
     plotScatterMatrix(df1, 20, 10)
