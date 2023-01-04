@@ -107,12 +107,13 @@ def feature_engineering(filename):
     ###########         Ajout du €/m2           ###########
     #######################################################
 
-    listPriceBySquareMeter = np.empty(0)
+    dataset_geocoded['prix_m2'] = ''
     for i in range(len(dataset_geocoded)):
-        prix = dataset_geocoded['Valeur fonciere'][i] / dataset_geocoded['Surface terrain'][i]
-        listPriceBySquareMeter = np.append(listPriceBySquareMeter, prix)
-
-    dataset_geocoded['prix_m2'] = listPriceBySquareMeter
+        price = dataset_geocoded['Valeur fonciere'][i] / dataset_geocoded['Surface terrain'][i]
+        if price <= 5000:
+            dataset_geocoded['prix_m2'][i] = price
+            i += 1
+        dataset_geocoded['prix_m2'][i] = 0
 
     ##################################################
     #######          Tri    ##########
@@ -125,6 +126,7 @@ def feature_engineering(filename):
     dataset_geocoded = dataset_geocoded[dataset_geocoded['latitude'].notna()]
     dataset_geocoded = dataset_geocoded[dataset_geocoded['longitude'].notna()]
     dataset_geocoded = dataset_geocoded[dataset_geocoded['densite_pop'] != 0]
+    dataset_geocoded = dataset_geocoded[dataset_geocoded['prix_m2'] != 0]
     dataset_geocoded = dataset_geocoded[dataset_geocoded['moy_dist_' + str(nbVoisins) + '_plus_proches'] != 0]
 
     selected_vars = [2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14, 28, 29, 30, 31]

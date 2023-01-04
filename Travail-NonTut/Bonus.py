@@ -1,10 +1,10 @@
 from Reseau_Neurones import reseauNeuronne
-from Arbre_Decision import arbreDecision
+from RandomForestRegressor import RandomForestRegressor
 from SVM import SVM
 import numpy as np  # pour utiliser des matrices
 
 reseauNeurone = reseauNeuronne()
-arbreDecision = arbreDecision()
+arbreDecision = RandomForestRegressor()
 svm = SVM()
 
 # Tableau totalisant les résultats des 3 algos
