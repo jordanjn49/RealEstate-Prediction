@@ -70,17 +70,17 @@ def neuronalNetworks():
     x_validation = scaler.transform(x_validation)
     x_test = scaler.transform(x_test)
 
-    nbr_neurones = 7
+    nbr_neurones = 10
 
     erreur_validation_la_plus_basse = 100
     early_stopping = False
 
     pause = "n"
     nbr_iterations = 40
-    i = 1
+    i = 0
     while (i < 50) and (not early_stopping):
         model = MLPRegressor(hidden_layer_sizes=[nbr_neurones], activation='tanh', solver='lbfgs', random_state=7,
-                             max_iter=i, tol=1e-6)
+                             max_iter=nbr_iterations, tol=1e-6)
         model.fit(x_train, y_train)
 
         y_predit_train = model.predict(x_train)
@@ -115,17 +115,16 @@ def neuronalNetworks():
         ###############################################
         # gestion de l'early-stopping :
         ##############################################
-        if i > 4:  # on voudrait pas que ça ne stoppe trop vite...
+        if i > 5:  # on voudrait pas que ça ne stoppe trop vite...
             erreur_validation_courante = tableau_erreurs_validation[tableau_erreurs_validation.size - 1]
             erreur_validation_la_plus_basse = min(tableau_erreurs_validation)
 
             print("erreur_validation_courante =" + str(erreur_validation_courante))
             print("erreur_validation_la_plus_basse =" + str(min(tableau_erreurs_validation)))
 
-            if erreur_validation_courante >= 1.10 * erreur_validation_la_plus_basse:  # i>4 pour laisser le réseau s'élancer
+            if erreur_validation_courante >= 1.20 * erreur_validation_la_plus_basse:  # i>5 pour laisser le réseau s'élancer
                 early_stopping = True
                 print("Stop ça remonte !!!")
 
 if __name__ == '__main__':
-    print("La prédiction en sortie est :")
     print(neuronalNetworks())
