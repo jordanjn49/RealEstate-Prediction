@@ -27,7 +27,7 @@ def neuronalNetworks():
 
     donnees_data_frame = pd.read_csv('DATASET-Final.csv', delimiter=",")
 
-    selected_vars = [6, 7, 8, 9, 10, 11, 13, 14, 15, 16]
+    selected_vars = [4, 7, 8, 9, 13, 14, 15, 16]
     selected_vars = [k - 1 for k in selected_vars]
     donnees_data_frame = donnees_data_frame[donnees_data_frame.columns[selected_vars]]
 
@@ -70,7 +70,7 @@ def neuronalNetworks():
     x_validation = scaler.transform(x_validation)
     x_test = scaler.transform(x_test)
 
-    nbr_neurones = 10
+    nbr_neurones = 8
 
     erreur_validation_la_plus_basse = 100
     early_stopping = False
