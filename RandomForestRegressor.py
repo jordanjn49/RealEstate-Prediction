@@ -71,6 +71,18 @@ def RandomForestRegressor():
     plt.grid(True)
     plt.show()
 
+    import operator
+    dict_test = {x_ax[i]: y_test[i][0] for i in x_ax}
+    sorted_dict_test = sorted(dict_test.items(), key=operator.itemgetter(1))
+    x_dict_test, y_dict_test = zip(*sorted_dict_test)
+
+    plt.plot(x_ax, y_dict_test, linewidth=1, label="Test")
+    plt.xlabel('Nombre de ligne testées')
+    plt.ylabel('Prix du m²')
+    plt.legend(loc='best', fancybox=True, shadow=True)
+    plt.grid(True)
+    plt.show()
+
 
 if __name__ == '__main__':
     RandomForestRegressor()
