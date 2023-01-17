@@ -5,6 +5,9 @@ from sklearn.preprocessing import StandardScaler
 from sklearn import set_config
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import mean_absolute_percentage_error
+import warnings
+
+warnings.filterwarnings("ignore")
 
 
 def RandomForestRegressor():
@@ -53,19 +56,22 @@ def RandomForestRegressor():
     rfr.fit(x_train, y_train)
 
     score = rfr.score(x_train, y_train)
+
+    print('======= RANDOM FOREST REGRESSOR ======= \n')
+    print('RESULTS')
     print("R-squared:", score)
 
-    y_validation = rfr.predict(x_test)
+    y_predict = rfr.predict(x_test)
 
-    print('MAPE: ', mean_absolute_percentage_error(y_test, y_validation))
-    print('MSE: ', mean_squared_error(y_test, y_validation))
-    print('RMSE: ', np.sqrt(mean_squared_error(y_test, y_validation)))
+    print('MAPE: ', mean_absolute_percentage_error(y_test, y_predict))
+    print('MSE: ', mean_squared_error(y_test, y_predict))
+    print('RMSE: ', np.sqrt(mean_squared_error(y_test, y_predict)))
 
     x_ax = range(len(y_test))
     plt.plot(x_ax, y_test, linewidth=1, label="Test")
-    plt.plot(x_ax, y_validation, linewidth=1.1, label="Prédiction")
+    plt.plot(x_ax, y_predict, linewidth=1.1, label="Prédiction")
     plt.title("Comparaison entre les données de test et celles prédites")
-    plt.xlabel('Nombre de ligne testées')
+    plt.xlabel('Indice de la donnée')
     plt.ylabel('Prix du m²')
     plt.legend(loc='best', fancybox=True, shadow=True)
     plt.grid(True)
@@ -76,9 +82,20 @@ def RandomForestRegressor():
     sorted_dict_test = sorted(dict_test.items(), key=operator.itemgetter(1))
     x_dict_test, y_dict_test = zip(*sorted_dict_test)
 
+    dict_predict = {x_ax[i]: y_predict[x_ax[i]] for i in x_dict_test}
+    sorted_dict_predict = sorted(dict_predict.items(), key=operator.itemgetter(1))
+    x_dict_predict, y_dict_predict = zip(*sorted_dict_predict)
+
+    print('\nDATA')
+    print('Test: ', sorted_dict_test)
+    print('Prediction: ', sorted_dict_predict)
+    print('================= END ================ \n')
+
+
     plt.plot(x_ax, y_dict_test, linewidth=1, label="Test")
-    plt.xlabel('Nombre de ligne testées')
+    plt.plot(x_ax, y_dict_predict, linewidth=1, label="Prédiction")
     plt.ylabel('Prix du m²')
+    plt.xlabel('Indice de la donnée après arrangement')
     plt.legend(loc='best', fancybox=True, shadow=True)
     plt.grid(True)
     plt.show()
